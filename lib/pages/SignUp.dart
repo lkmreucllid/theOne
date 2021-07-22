@@ -35,7 +35,7 @@ class SignInPage extends StatelessWidget {
                   labelText: 'password',
                 ),
               ),
-              ElevatedButton(
+              RaisedButton(
                 onPressed: () {
                   // ignore: unnecessary_statements
                   context.read<AuthenticationService>().signIn(
