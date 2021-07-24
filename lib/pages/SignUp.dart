@@ -1,16 +1,39 @@
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:theOne/authentication_service.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:theOne/pages/Home.dart';
+import 'Home.dart';
 
-class SignInPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  DatabaseReference dbRef =
+      FirebaseDatabase.instance.reference().child("Users");
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    ageController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        overflow: Overflow.visible,
+        clipBehavior: Clip.antiAlias,
         children: [
           Container(
             decoration: BoxDecoration(
@@ -35,12 +58,21 @@ class SignInPage extends StatelessWidget {
                   labelText: 'password',
                 ),
               ),
-              RaisedButton(
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+              ),
+              TextFormField(
+                controller: ageController,
+                decoration: InputDecoration(
+                  labelText: 'age',
+                ),
+              ),
+              ElevatedButton(
                 onPressed: () {
-                  // ignore: unnecessary_statements
-                  context.read<AuthenticationService>().signIn(
-                      emailController.text.trim(),
-                      passwordController.text.trim());
+                  registerToFb(context);
                 },
                 child: Text('Sign In'),
               )
@@ -49,5 +81,41 @@ class SignInPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void registerToFb(BuildContext context) {
+    firebaseAuth
+        .createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((result) {
+      dbRef.child(result.user.uid).set({
+        "email": emailController.text,
+        "age": ageController.text,
+        "name": nameController.text,
+      }).then((res) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      });
+    }).catchError((err) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                TextButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+    HomePage();
   }
 }

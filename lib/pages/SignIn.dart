@@ -10,7 +10,7 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        overflow: Overflow.visible,
+        clipBehavior: Clip.antiAlias,
         children: [
           Container(
             decoration: BoxDecoration(

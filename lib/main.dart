@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
                 context.read<AuthenticationService>().authStateChanges),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        title: 'theOne',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,

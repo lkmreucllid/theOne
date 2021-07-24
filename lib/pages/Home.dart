@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             Text('This is the Home Page'),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () {
                 context.read<AuthenticationService>().signOut();
               },

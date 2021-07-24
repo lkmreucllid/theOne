@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'SignIn.dart';
+import 'SignUp.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 
 class IntroductionScreenPage extends StatefulWidget {
   @override
@@ -20,10 +21,19 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
       )),
       decoration: const PageDecoration(pageColor: Color(0xffF3F4F4)),
       footer: ElevatedButton(
-        onPressed: () {
-          return SignInPage();
+        onPressed: () async {
+          await LaunchApp.openApp(
+            androidPackageName: 'com.medium.reader',
+            iosUrlScheme: 'pulsesecure://',
+            appStoreLink:
+                'https://play.google.com/store/apps/details?id=com.medium.reader',
+            // openStore: false
+          );
+          // Enter thr package name of the App you  want to open and for iOS add the     URLscheme to the Info.plist file.
+          // The second arguments decide wether the     app redirects PlayStore or AppStore.
+          // For testing purpose you can enter com. instagram.android
         },
-        child: const Text("Let's Go !"),
+        child: const Text("Open Medium App"),
       ),
     ),
     PageViewModel(
@@ -61,17 +71,20 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
       ),
     ),
     PageViewModel(
-      title: "Title of fifth page",
-      bodyWidget: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text("Click on "),
-          Icon(Icons.edit),
-          Text(" to edit a post"),
-        ],
-      ),
-      image: const Center(child: Icon(Icons.android)),
-    )
+        title: "Flutter",
+        bodyWidget: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text("Click on "),
+            Icon(Icons.edit),
+            Text(" to edit a post"),
+          ],
+        ),
+        image: Center(
+            child: Image.network(
+                "https://flutter.dev/assets/flutter-lockup-1caf6476beed76adec3c477586da54de6b552b2f42108ec5bc68dc63bae2df75.png",
+                height: 175.0)),
+        decoration: const PageDecoration(pageColor: Color(0xFFE6E6E6)))
   ];
 
   @override
@@ -79,19 +92,23 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
     return IntroductionScreen(
       pages: listPagesViewModel,
       onDone: () {
-        return SignInPage();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => SignUpPage()));
       },
       onSkip: () {
-        return SignInPage();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => SignUpPage()));
       },
       showSkipButton: true,
-      skip: const Icon(Icons.skip_next),
+      skip: new IconTheme(
+          data: new IconThemeData(color: Colors.black),
+          child: new Icon(Icons.skip_next)),
       next: const Icon(Icons.forward_outlined),
       done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
       dotsDecorator: DotsDecorator(
           size: const Size.square(5.0),
           activeSize: const Size(10.0, 5.0),
-          activeColor: Colors.blue,
+          activeColor: Colors.red.shade300,
           color: Colors.black26,
           spacing: const EdgeInsets.symmetric(horizontal: 3.0),
           activeShape: RoundedRectangleBorder(
