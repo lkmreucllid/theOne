@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'SignUp.dart';
+import 'Options.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 
 class IntroductionScreenPage extends StatefulWidget {
@@ -29,8 +29,8 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
                 'https://play.google.com/store/apps/details?id=com.medium.reader',
             // openStore: false
           );
-          // Enter thr package name of the App you  want to open and for iOS add the     URLscheme to the Info.plist file.
-          // The second arguments decide wether the     app redirects PlayStore or AppStore.
+          // Enter thr package name of the App you  want to open and for iOS add the URLscheme to the Info.plist file.
+          // The second arguments decide wether the app redirects PlayStore or AppStore.
           // For testing purpose you can enter com. instagram.android
         },
         child: const Text("Open Medium App"),
@@ -93,11 +93,11 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
       pages: listPagesViewModel,
       onDone: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => SignUpPage()));
+            context, MaterialPageRoute(builder: (_) => OptionsPage()));
       },
       onSkip: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => SignUpPage()));
+            context, MaterialPageRoute(builder: (_) => OptionsPage()));
       },
       showSkipButton: true,
       skip: new IconTheme(

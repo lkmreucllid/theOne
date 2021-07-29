@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:theOne/pages/Home.dart';
 import 'Home.dart';
+import 'package:theOne/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -72,9 +74,12 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  registerToFb(context);
+                  context.read<AuthenticationService>().signUp(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                      context);
                 },
-                child: Text('Sign In'),
+                child: Text('Sign Up'),
               )
             ],
           ),
@@ -83,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void registerToFb(BuildContext context) {
+  /*void registerToFb(BuildContext context) {
     firebaseAuth
         .createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
@@ -116,6 +121,6 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           });
     });
-    HomePage();
-  }
+  }*/
+
 }
