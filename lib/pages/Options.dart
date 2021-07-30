@@ -17,7 +17,7 @@ class _OptionsPageState extends State<OptionsPage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/signup.jpg'),
+                image: AssetImage('assets/images/signup.jpg'),
                 fit: BoxFit.fill,
               ),
             ),

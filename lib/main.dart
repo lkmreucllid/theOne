@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           splash: Container(
             height: 1200.0,
             width: 640.0,
-            child: Image.asset('lib/assets/manu_trans.jpg'),
+            child: Image.asset('assets/images/manu_trans.jpg'),
           ),
           duration: 1000,
           nextScreen: AuthenticationWrapper(),

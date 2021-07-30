@@ -23,7 +23,7 @@ class _SignInPageState extends State<SignInPage> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/signup.jpg'),
+                image: AssetImage('assets/images/signup.jpg'),
                 fit: BoxFit.fill,
               ),
             ),
