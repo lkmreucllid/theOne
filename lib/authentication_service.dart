@@ -8,7 +8,7 @@ class AuthenticationService {
 
   AuthenticationService(this._firebaseAuth);
 
-  Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   Future<void> signOut(BuildContext context) async {
     await _firebaseAuth.signOut();
@@ -23,11 +23,11 @@ class AuthenticationService {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((result) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) => HomePage(result.user.email)));
+            MaterialPageRoute(builder: (_) => HomePage(result.user!.email)));
       });
       return 'Signed In';
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return e.message.toString();
     }
   }
 
@@ -38,11 +38,11 @@ class AuthenticationService {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((result) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) => HomePage(result.user.email)));
+            MaterialPageRoute(builder: (_) => HomePage(result.user!.email)));
       });
       return 'Signed Up';
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return e.message.toString();
     }
   }
 }

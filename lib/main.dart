@@ -59,11 +59,11 @@ class MyApp extends StatelessWidget {
 class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
-    final User result = FirebaseAuth.instance.currentUser;
+    final firebaseUser = context.watch<User?>();
+    final User? result = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
-      //return HomePage(result.email);
-      return FreedomChat();
+      return HomePage(result!.email);
+      //return FreedomChat();
     }
     return OptionsPage();
   }

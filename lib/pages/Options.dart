@@ -70,7 +70,7 @@ class _OptionsPageState extends State<OptionsPage> {
                           'Sign Up',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class _OptionsPageState extends State<OptionsPage> {
                           'Sign In',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(

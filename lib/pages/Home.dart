@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:theOne/authentication_service.dart';
-import 'package:provider/provider.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import "package:provider/provider.dart";
 import 'package:theOne/freedomchat/FreedomChat.dart';
 import '../sms/MyInbox.dart';
 
 class HomePage extends StatefulWidget {
-  final String uid;
+  final String? uid;
   HomePage(this.uid);
 
   @override
@@ -39,10 +40,10 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.uid,
+                          widget.uid.toString(),
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.black),
                         ),
                         Text(
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                           'Read My Messages',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(
@@ -152,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                           'Read My Messages',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(
@@ -214,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                           'Take Me to Chat',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(
@@ -273,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                           'Sign Out',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(

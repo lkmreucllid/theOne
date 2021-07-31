@@ -124,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                           'Sign In',
                           style: Theme.of(context)
                               .textTheme
-                              .button
+                              .button!
                               .apply(color: Colors.white),
                         ),
                         decoration: BoxDecoration(

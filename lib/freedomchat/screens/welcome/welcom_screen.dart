@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
-                  .headline5
+                  .headline5!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             Spacer(),
@@ -27,8 +27,8 @@ class WelcomeScreen extends StatelessWidget {
               style: TextStyle(
                 color: Theme.of(context)
                     .textTheme
-                    .bodyText1
-                    .color
+                    .bodyText1!
+                    .color!
                     .withOpacity(0.64),
               ),
             ),
@@ -45,11 +45,11 @@ class WelcomeScreen extends StatelessWidget {
                   children: [
                     Text(
                       "Skip",
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color: Theme.of(context)
                                 .textTheme
-                                .bodyText1
-                                .color
+                                .bodyText1!
+                                .color!
                                 .withOpacity(0.8),
                           ),
                     ),
@@ -61,8 +61,8 @@ class WelcomeScreen extends StatelessWidget {
                       size: 16,
                       color: Theme.of(context)
                           .textTheme
-                          .bodyText1
-                          .color
+                          .bodyText1!
+                          .color!
                           .withOpacity(0.8),
                     ),
                   ],
