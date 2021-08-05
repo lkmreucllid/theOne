@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:theOne/authentication_service.dart';
+import 'package:theOne/firebase/authentication_service.dart';
 import 'package:theOne/pages/SignUp.dart';
 
 class SignInPage extends StatefulWidget {

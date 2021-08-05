@@ -1,70 +1,54 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:theOne/authentication_service.dart';
-import 'package:theOne/freedomchat/FreedomChat.dart';
-import 'package:theOne/pages/Options.dart';
-import 'pages/Home.dart';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:theOne/api/screens/homeAPI.dart';
+import 'package:theOne/api/screens/singUpAPI.dart';
+import 'package:theOne/api/screens/singinAPI.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
+//This is the file to add Api authentications, else main_original is the main file
+void main() {
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    return MultiProvider(
-      providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance),
-        ),
-        StreamProvider(
-            create: (context) =>
-                context.read<AuthenticationService>().authStateChanges),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'theOne',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: AnimatedSplashScreen(
-          splash: Container(
-            height: 1200.0,
-            width: 640.0,
-            child: Image.asset('assets/images/manu_trans.jpg'),
+    return MaterialApp(
+      theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
+      home: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.black,
           ),
-          duration: 1000,
-          nextScreen: AuthenticationWrapper(),
-          splashTransition: SplashTransition.fadeTransition,
-          backgroundColor: Colors.white,
-          pageTransitionType: PageTransitionType.bottomToTop,
-        ),
+          (_loginStatus == 1) ? HomeAPI() : SignInAPI(),
+        ],
       ),
     );
   }
-}
 
-class AuthenticationWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User?>();
-    final User? result = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      return HomePage(result!.email);
-      //return FreedomChat();
-    }
-    return OptionsPage();
+  var _loginStatus = 0;
+
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _loginStatus = preferences.getInt("value")!;
+    });
   }
 }

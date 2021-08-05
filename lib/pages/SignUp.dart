@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:theOne/pages/Home.dart';
 import 'Home.dart';
-import 'package:theOne/authentication_service.dart';
+import 'package:theOne/firebase/authentication_service.dart';
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
