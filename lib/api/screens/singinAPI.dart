@@ -222,7 +222,7 @@ class _SignInAPIState extends State<SignInAPI> {
       Map<String, dynamic> user = responseBody['data'];
       if (responseBody['sucess'] != null) {
         print("User Name ${user['name']}");
-        savePref(1, user['name'], user['email'], user['id']);
+        savePref(1, user['name'], user['email'], user['token'], user['_id']);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomeAPI()));
       } else {
@@ -235,7 +235,8 @@ class _SignInAPIState extends State<SignInAPI> {
           .showSnackBar(SnackBar(content: Text("Please try again!")));
   }
 
-  savePref(int value, String name, String email, int id) async {
+  savePref(
+      int value, String name, String email, String bearer, String id) async {
     print("these");
     Future<SharedPreferences> _preferences = SharedPreferences.getInstance();
     final SharedPreferences preferences = await _preferences;
@@ -243,6 +244,7 @@ class _SignInAPIState extends State<SignInAPI> {
     preferences.setInt("value", value);
     preferences.setString("name", name);
     preferences.setString("email", email);
+    preferences.setString("bearer", bearer);
     preferences.setString("id", id.toString()).then((value) => null);
   }
 }
