@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theOne/api/screens/homeAPI.dart';
-import 'package:theOne/api/screens/singUpAPI.dart';
 import 'package:theOne/api/screens/singinAPI.dart';
 
 //This is the file to add Api authentications, else main_original is the main file

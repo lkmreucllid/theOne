@@ -121,12 +121,13 @@ class _SignInAPIState extends State<SignInAPI> {
                                       scaffoldMessenger.showSnackBar(SnackBar(
                                           content: Text(
                                               "Please Fill ina ll fields")));
+                                    } else {
+                                      login(_emailController.text,
+                                          _passwordController.text);
+                                      setState(() {
+                                        isLoading = true;
+                                      });
                                     }
-                                    login(_emailController.text,
-                                        _passwordController.text);
-                                    setState(() {
-                                      isLoading = true;
-                                    });
                                   },
                                   child: Container(
                                     alignment: Alignment.center,

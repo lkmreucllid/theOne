@@ -362,17 +362,17 @@ class _SignUpAPIState extends State<SignUpAPI> {
     });
     print("calling");
     Map data = {
-      'name': name,
-      'country': country,
-      'address': address,
-      'password': password,
-      'contact': contact,
-      'gender': gender,
-      'email': email
+      "name": name,
+      "country": country,
+      "address": address,
+      "password": password,
+      "contact": contact,
+      "gender": gender.toString().toUpperCase(),
+      "email": email
     };
     print(data.toString());
     final response = await http.post(Uri.parse(ROOT), body: data);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       setState(() {
         isLoading = false;
       });
