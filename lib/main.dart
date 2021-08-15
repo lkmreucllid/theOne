@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theOne/api/screens/homeAPI.dart';
 import 'package:theOne/api/screens/singinAPI.dart';
+import 'package:flutter/services.dart';
 
 //This is the file to add Api authentications, else main_original is the main file
 void main() {
   runApp(MaterialApp(
     home: MyApp(),
+    debugShowCheckedModeBanner: false,
   ));
 }
 
@@ -26,6 +28,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,

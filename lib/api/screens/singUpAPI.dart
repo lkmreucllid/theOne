@@ -36,320 +36,338 @@ class _SignUpAPIState extends State<SignUpAPI> {
     scaffoldMessenger = ScaffoldMessenger.of(context);
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.blueAccent,
-              ),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Sign Up",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 1,
-                          fontSize: 23,
+        child: SafeArea(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.red,
+            child: Stack(
+              children: [
+                Container(
+                  child: Image.asset(
+                    "assets/images/peaky_blinders.jpg",
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.white.withOpacity(0.10),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.black87,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Sign Up",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.roboto(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 1,
+                            fontSize: 23,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Form(
-                      key: _formKey,
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 45),
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                hintText: "Name",
-                                hintStyle: TextStyle(
-                                    color: Colors.white70, fontSize: 15),
-                              ),
-                              onSaved: (val) {
-                                name = val!;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            TextFormField(
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                hintText: "Email",
-                                hintStyle: TextStyle(
-                                    color: Colors.white70, fontSize: 15),
-                              ),
-                              onSaved: (val) {
-                                email = val!;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            TextFormField(
-                              obscureText: true,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                hintText: "Password",
-                                hintStyle: TextStyle(
-                                    color: Colors.white70, fontSize: 15),
-                              ),
-                              onSaved: (val) {
-                                password = val!;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            TextFormField(
-                              keyboardType: TextInputType.phone,
-                              maxLength: 10,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9]')),
-                              ],
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              controller: _contactController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                hintText: "Contact No.",
-                                hintStyle: TextStyle(
-                                    color: Colors.white70, fontSize: 15),
-                              ),
-                              onSaved: (val) {
-                                contact = val!;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: CountryListPick(
-                                theme: CountryTheme(
-                                  isShowFlag: false,
-                                  isShowTitle: true,
-                                  isShowCode: false,
-                                  isDownIcon: true,
-                                  showEnglishName: true,
-                                  labelColor: Colors.white,
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Form(
+                        key: _formKey,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 45),
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
-                                initialSelection: '+91',
-                                onChanged: (CountryCode? code) {
-                                  country = code!.name;
-                                  print(country);
-                                  print(code.toString());
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
+                                  hintText: "Name",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white70, fontSize: 15),
+                                ),
+                                onSaved: (val) {
+                                  name = val!;
                                 },
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            TextFormField(
-                              style: TextStyle(
-                                color: Colors.white,
+                              SizedBox(
+                                height: 16,
                               ),
-                              controller: _addressController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                hintText: "Address.",
-                                hintStyle: TextStyle(
-                                    color: Colors.white70, fontSize: 15),
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                controller: _emailController,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
+                                  hintText: "Email",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white70, fontSize: 15),
+                                ),
+                                onSaved: (val) {
+                                  email = val!;
+                                },
                               ),
-                              onSaved: (val) {
-                                address = val!;
-                              },
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width / 2,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30),
+                              SizedBox(
+                                height: 16,
                               ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: DropdownButton<String>(
-                                  value: gender,
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  iconSize: 16,
-                                  elevation: 16,
-                                  style: TextStyle(color: Colors.blueAccent),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      gender = newValue!;
-                                    });
+                              TextFormField(
+                                obscureText: true,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                controller: _passwordController,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
+                                  hintText: "Password",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white70, fontSize: 15),
+                                ),
+                                onSaved: (val) {
+                                  password = val!;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                keyboardType: TextInputType.phone,
+                                maxLength: 10,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp('[0-9]')),
+                                ],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                controller: _contactController,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
+                                  hintText: "Contact No.",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white70, fontSize: 15),
+                                ),
+                                onSaved: (val) {
+                                  contact = val!;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: CountryListPick(
+                                  theme: CountryTheme(
+                                    isShowFlag: false,
+                                    isShowTitle: true,
+                                    isShowCode: false,
+                                    isDownIcon: true,
+                                    showEnglishName: true,
+                                    labelColor: Colors.black,
+                                  ),
+                                  initialSelection: '+91',
+                                  onChanged: (CountryCode? code) {
+                                    country = code!.name;
                                   },
-                                  items: <String>['Male', 'Female', 'Other']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            Stack(
-                              children: [
-                                Container(
+                              SizedBox(
+                                height: 16,
+                              ),
+                              TextFormField(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                controller: _addressController,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
+                                  hintText: "Address.",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white70, fontSize: 15),
+                                ),
+                                onSaved: (val) {
+                                  address = val!;
+                                },
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Align(
                                   alignment: Alignment.center,
-                                  width: double.infinity,
-                                  height: 50,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (isLoading) {
-                                        return;
-                                      }
-                                      if (_nameController.text.isEmpty) {
-                                        scaffoldMessenger.showSnackBar(SnackBar(
-                                            content:
-                                                Text("Please Enter Name")));
-                                      } else if (!reg
-                                          .hasMatch(_emailController.text)) {
-                                        scaffoldMessenger.showSnackBar(SnackBar(
-                                            content:
-                                                Text("Enter Valid Email")));
-                                        return;
-                                      } else if (_passwordController
-                                              .text.isEmpty ||
-                                          _passwordController.text.length < 6) {
-                                        scaffoldMessenger.showSnackBar(SnackBar(
-                                            content: Text(
-                                                "Password should be min 6 characters")));
-
-                                        return;
-                                      } else if (_contactController
-                                              .text.isEmpty ||
-                                          _contactController.text.length < 10) {
-                                        scaffoldMessenger.showSnackBar(SnackBar(
-                                            content: Text(
-                                                "Contact should be min 10 numbers")));
-                                      } else if (_addressController
-                                          .text.isEmpty) {
-                                        scaffoldMessenger.showSnackBar(SnackBar(
-                                            content: Text(
-                                                "Please fill in address")));
-                                      } else {
-                                        signup(
-                                            _nameController.text,
-                                            country,
-                                            _addressController.text,
-                                            _passwordController.text,
-                                            _contactController.text,
-                                            gender,
-                                            _emailController.text);
-                                      }
+                                  child: DropdownButton<String>(
+                                    value: gender,
+                                    icon: const Icon(Icons.arrow_drop_down),
+                                    iconSize: 16,
+                                    elevation: 16,
+                                    style: TextStyle(color: Colors.black),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        gender = newValue!;
+                                      });
                                     },
-                                    child: Text(
-                                      "CREATE ACCOUNT",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.roboto(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              letterSpacing: 1)),
+                                    items: <String>['Male', 'Female', 'Other']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: double.infinity,
+                                    height: 50,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 0),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (isLoading) {
+                                          return;
+                                        }
+                                        if (_nameController.text.isEmpty) {
+                                          scaffoldMessenger.showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      "Please Enter Name")));
+                                        } else if (!reg
+                                            .hasMatch(_emailController.text)) {
+                                          scaffoldMessenger.showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      "Enter Valid Email")));
+                                          return;
+                                        } else if (_passwordController
+                                                .text.isEmpty ||
+                                            _passwordController.text.length <
+                                                6) {
+                                          scaffoldMessenger.showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Password should be min 6 characters")));
+
+                                          return;
+                                        } else if (_contactController
+                                                .text.isEmpty ||
+                                            _contactController.text.length <
+                                                10) {
+                                          scaffoldMessenger.showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Contact should be min 10 numbers")));
+                                        } else if (_addressController
+                                            .text.isEmpty) {
+                                          scaffoldMessenger.showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Please fill in address")));
+                                        } else {
+                                          signup(
+                                              _nameController.text,
+                                              country,
+                                              _addressController.text,
+                                              _passwordController.text,
+                                              _contactController.text,
+                                              gender,
+                                              _emailController.text);
+                                        }
+                                      },
+                                      child: Text(
+                                        "CREATE ACCOUNT",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.roboto(
+                                            textStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                letterSpacing: 1)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  child: (isLoading)
-                                      ? Center(
-                                          child: Container(
-                                            height: 26,
-                                            width: 26,
-                                            child: CircularProgressIndicator(
-                                              backgroundColor: Colors.green,
+                                  Positioned(
+                                    child: (isLoading)
+                                        ? Center(
+                                            child: Container(
+                                              height: 26,
+                                              width: 26,
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: Colors.green,
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  right: 30,
-                                  top: 0,
-                                  bottom: 0,
-                                ),
-                              ],
-                            ),
-                          ],
+                                          )
+                                        : Container(),
+                                    right: 30,
+                                    top: 0,
+                                    bottom: 0,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignInAPI()),
+                      SizedBox(
+                        height: 20,
                       ),
-                      child: Text(
-                        "Already have an account?",
-                        style: GoogleFonts.roboto(
-                            textStyle: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 13,
-                                decoration: TextDecoration.underline,
-                                letterSpacing: 0.5)),
+                      GestureDetector(
+                        onTap: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignInAPI()),
+                        ),
+                        child: Text(
+                          "Already have an account?",
+                          style: GoogleFonts.roboto(
+                              textStyle: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 13,
+                                  decoration: TextDecoration.underline,
+                                  letterSpacing: 0.5)),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

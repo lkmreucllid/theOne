@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:string_extensions/string_extensions.dart';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class _HomeAPIState extends State<HomeAPI> {
   TextEditingController _contactFilterController = new TextEditingController();
   GlobalKey<ScaffoldState> _scafflodKey = GlobalKey();
   late ScaffoldMessengerState scaffoldMessenger;
+  bool showHideBar = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +71,11 @@ class _HomeAPIState extends State<HomeAPI> {
     final SharedPreferences prefs = await _prefs;
     prefs.clear();
     if (_error) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => LogoutLoad()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LogoutLoad()));
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => SignInAPI()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => SignInAPI()));
     }
   }
 
@@ -86,7 +90,7 @@ class _HomeAPIState extends State<HomeAPI> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black26,
         title: FutureBuilder(
           future: getNameFromPref(),
           builder: (context, snapshot) {
@@ -95,20 +99,30 @@ class _HomeAPIState extends State<HomeAPI> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  _error = false;
-                });
-                logout();
-              },
-              icon: Icon(Icons.logout))
+            onPressed: () {
+              setState(() {
+                _selected = !_selected;
+              });
+            },
+            icon: Icon(Icons.filter_alt_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _error = false;
+              });
+              logout();
+            },
+            icon: Icon(Icons.logout),
+          ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        bottom: false,
         child: Container(
-          color: Color(0xFFC71632),
+          color: Colors.black,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.only(top: 10, bottom: 10),
+          padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -121,12 +135,12 @@ class _HomeAPIState extends State<HomeAPI> {
                 child: AnimatedContainer(
                   color: Colors.blue,
                   duration: Duration(milliseconds: 500),
-                  height: _selected ? _heightVal : 50,
+                  height: _selected ? _heightVal : 0,
                   width: MediaQuery.of(context).size.width,
                   child: showFilters(),
                 ),
               ),
-              Expanded(
+              Flexible(
                 child: (isLoading)
                     ? Center(
                         child: Container(
@@ -145,8 +159,10 @@ class _HomeAPIState extends State<HomeAPI> {
                               Card(
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
-                                    vertical: 15.0,
-                                    horizontal: 12.0,
+                                    vertical: 10.0,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.0,
                                   ),
                                   decoration: BoxDecoration(
                                       boxShadow: [
@@ -170,9 +186,22 @@ class _HomeAPIState extends State<HomeAPI> {
                                   child: InkWell(
                                     splashColor: Colors.blue.withAlpha(30),
                                     onTap: () {
-                                      print("Tapped on Inkwell");
+                                      setState(() {
+                                        showHideBar = !showHideBar;
+                                      });
+                                      if (showHideBar) {
+                                        SystemChrome.setEnabledSystemUIOverlays(
+                                            [SystemUiOverlay.top]);
+                                      } else {
+                                        SystemChrome.setEnabledSystemUIOverlays(
+                                            SystemUiOverlay.values);
+                                      }
                                     },
                                     child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         buildInnerRow("Name: ",
                                             "${snapshot.data[index].name}"),
@@ -209,8 +238,11 @@ class _HomeAPIState extends State<HomeAPI> {
   buildInnerRow(String label, String value) {
     return Row(
       children: [
-        Text(label),
-        Text(value),
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Flexible(child: Text(value, maxLines: 3, softWrap: true)),
       ],
     );
   }

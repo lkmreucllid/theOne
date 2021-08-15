@@ -32,20 +32,33 @@ class _SignInAPIState extends State<SignInAPI> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
+          color: Colors.black,
           child: Stack(
             children: [
               Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.blueAccent,
+                child: Image.asset(
+                  "assets/images/peaky_blinders.jpg",
+                  fit: BoxFit.fitWidth,
+                ),
               ),
               Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white.withOpacity(0.10),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 100, horizontal: 30),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.black87,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Sing In",
+                      "Sign In",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.roboto(
                         textStyle: TextStyle(
@@ -238,7 +251,6 @@ class _SignInAPIState extends State<SignInAPI> {
 
   savePref(
       int value, String name, String email, String bearer, String id) async {
-    print("these");
     Future<SharedPreferences> _preferences = SharedPreferences.getInstance();
     final SharedPreferences preferences = await _preferences;
 
