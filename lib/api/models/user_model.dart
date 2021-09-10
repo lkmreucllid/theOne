@@ -48,8 +48,27 @@ class User {
       contact: json["contact"],
       gender: json["gender"]);
 
+  factory User.fromDB(Map<String, dynamic> json) => new User(
+      id: json["id"],
+      name: json["name"],
+      email: json["email"],
+      country: json["country"],
+      address: json["address"],
+      contact: json["contact"],
+      gender: json["gender"]);
+
   Map<String, dynamic> toJson() => {
         "_id": id,
+        "name": name,
+        "email": email,
+        "country": country,
+        "address": address,
+        "contact": contact,
+        "gender": gender,
+      };
+
+  Map<String, dynamic> toDB() => {
+        "id": id,
         "name": name,
         "email": email,
         "country": country,

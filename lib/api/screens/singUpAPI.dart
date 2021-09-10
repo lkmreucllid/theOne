@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:country_list_pick/country_list_pick.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theOne/api/apiCall.dart';
-import 'package:theOne/api/screens/homeAPI.dart';
 import 'package:theOne/api/screens/singinAPI.dart';
+import '../resources/shared_pref.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpAPI extends StatefulWidget {
@@ -21,7 +20,6 @@ class _SignUpAPIState extends State<SignUpAPI> {
   late String? country = "India";
 
   bool isLoading = false;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   late ScaffoldMessengerState scaffoldMessenger;
   var reg = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
@@ -378,7 +376,6 @@ class _SignUpAPIState extends State<SignUpAPI> {
     setState(() {
       isLoading = true;
     });
-    print("calling");
     Map data = {
       "name": name,
       "country": country,
@@ -388,7 +385,7 @@ class _SignUpAPIState extends State<SignUpAPI> {
       "gender": gender.toString().toUpperCase(),
       "email": email
     };
-    print(data.toString());
+
     final response = await http.post(Uri.parse(ROOT), body: data);
     if (response.statusCode == 201) {
       setState(() {
@@ -398,9 +395,9 @@ class _SignUpAPIState extends State<SignUpAPI> {
       if (!responseBody["error"]) {
         Map<String, dynamic> user = responseBody['data'];
         print(" User name ${user['data']}");
-        savePref(1, user['name'], user['email'], user['id']);
+        savePref(1, user['name'], user['email'], user['token'], user['id']);
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeAPI()));
+            context, MaterialPageRoute(builder: (context) => SignInAPI()));
       } else {
         print(" ${responseBody['message']}");
       }
@@ -409,15 +406,5 @@ class _SignUpAPIState extends State<SignUpAPI> {
     } else
       scaffoldMessenger
           .showSnackBar(SnackBar(content: Text("Please Try Again")));
-  }
-
-  savePref(int value, String name, String email, int id) async {
-    Future<SharedPreferences> _preferences = SharedPreferences.getInstance();
-    final SharedPreferences preferences = await _preferences;
-
-    preferences.setInt("key", value);
-    preferences.setString("key", name);
-    preferences.setString("key", email);
-    preferences.setString("key", id.toString()).then((bool success) => null);
   }
 }

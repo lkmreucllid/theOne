@@ -4,6 +4,7 @@ import 'package:theOne/firebase/authentication_service.dart';
 import "package:provider/provider.dart";
 import 'package:theOne/freedomchat/FreedomChat.dart';
 import '../sms/MyInbox.dart';
+import '../freedomchat/constants.dart';
 
 class HomePage extends StatefulWidget {
   final String? uid;
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         //backgroundColor: Color(0xFFDCDCDC),
-        backgroundColor: Color(0xFFC71632),
+        backgroundColor: kPrimaryColor,
         body: Container(
           padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 12.0),
           child: Column(

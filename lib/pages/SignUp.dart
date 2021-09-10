@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:theOne/pages/Home.dart';
-import 'Home.dart';
 import 'package:theOne/firebase/authentication_service.dart';
 import 'package:provider/provider.dart';
 

@@ -39,6 +39,8 @@ dependencies:
   country_list_pick: ^1.0.1+5
   rxdart: ^0.27.1
   string_extensions: ^0.3.0
+  sqflite: ^2.0.0+3
+  path_provider: ^2.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

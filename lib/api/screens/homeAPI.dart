@@ -1,16 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/services.dart';
+
 import 'package:string_extensions/string_extensions.dart';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:theOne/api/apiCall.dart';
-import 'package:theOne/api/models/user_model.dart';
-import 'package:theOne/api/screens/logoutAPI.dart';
-
-import 'package:http/http.dart' as http;
-import 'package:theOne/api/screens/singinAPI.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:theOne/api/resources/users_db_provider.dart';
+import 'package:theOne/api/screens/profile/profile.dart';
+import '../resources/shared_pref.dart';
+import '../resources/users_api_provider.dart';
 
 class HomeAPI extends StatefulWidget {
   HomeAPI();
@@ -20,215 +17,202 @@ class HomeAPI extends StatefulWidget {
 }
 
 class _HomeAPIState extends State<HomeAPI> {
-  bool _selected = false;
-  bool _error = false;
-  bool isLoading = false;
-  final double _heightVal = 300;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final _formkey = GlobalKey<FormState>();
   late String? nameFilter, contactFilter;
-  TextEditingController _nameFilterController = new TextEditingController();
-  TextEditingController _contactFilterController = new TextEditingController();
-  GlobalKey<ScaffoldState> _scafflodKey = GlobalKey();
   late ScaffoldMessengerState scaffoldMessenger;
-  bool showHideBar = false;
+  //bool showHideBar = false;
+  UserApiProvider userApiProvider = UserApiProvider();
+  UserDbProvider userDbProvider = UserDbProvider();
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-        future: fetchAllUsers(
-            _nameFilterController.text, _contactFilterController.text),
-        builder: (BuildContext context, AsyncSnapshot userSnapshot) {
-          return buildTile(context, userSnapshot);
-        });
-  }
+  TextEditingController _contactFilterController = new TextEditingController();
+  bool _error = false;
+  final _formkey = GlobalKey<FormState>();
+  //bool isLoading = false;
+  final double _heightVal = 200;
 
-  Future<List<User>?> fetchAllUsers(
-      String? nameFilter, String? contactFilter) async {
-    final SharedPreferences prefs = await _prefs;
-    final bearer = prefs.getString('bearer');
-
-    final response = await http.get(
-      Uri.parse('$ROOT?name=$nameFilter&contact=$contactFilter'),
-      headers: {'Authorization': 'Bearer $bearer'},
-    );
-    Map<String, dynamic> responseBody = jsonDecode(response.body);
-    if (responseBody['sucess'] == false) {
-      setState(() {
-        _error = true;
-      });
-      logout();
-    }
-    if (response.statusCode == 200) {
-      isLoading = false;
-      return allUsersFromAPI(jsonEncode(responseBody['data']));
-    }
-    return null;
-  }
-
-  logout() async {
-    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    prefs.clear();
-    if (_error) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => LogoutLoad()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => SignInAPI()));
-    }
-  }
+  TextEditingController _nameFilterController = new TextEditingController();
+  GlobalKey<ScaffoldState> _scafflodKey = GlobalKey();
+  bool _selected = false;
 
   Widget buildTile(BuildContext context, AsyncSnapshot snapshot) {
-    if (!snapshot.hasData) {
-      return Center(
-        child: CircularProgressIndicator(
-          color: Colors.red,
-        ),
-      );
-    }
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.black26,
-        title: FutureBuilder(
-          future: getNameFromPref(),
-          builder: (context, snapshot) {
-            return Text("Logged in as: ${snapshot.data}");
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _selected = !_selected;
-              });
-            },
-            icon: Icon(Icons.filter_alt_outlined),
-          ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _error = false;
-              });
-              logout();
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: Container(
-          color: Colors.black,
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
+    return Material(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.black87,
+            title: FutureBuilder(
+              future: getNameFromPref(),
+              builder: (context, snapshot) {
+                return Text(
+                  "In as: ${snapshot.data}",
+                  style: GoogleFonts.roboto(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontSize: 18,
+                    ),
+                  ),
+                );
+              },
+            ),
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  await userApiProvider.fetchAllUsers(
+                      _nameFilterController.text,
+                      _contactFilterController.text,
+                      context);
+                  userDbProvider.fetchAllUsers(_nameFilterController.text,
+                      _contactFilterController.text, context);
+                  setState(() {
+                    _selected = false;
+                  });
+                },
+                icon: Icon(Icons.refresh),
+              ),
+              IconButton(
+                onPressed: () {
                   setState(() {
                     _selected = !_selected;
                   });
                 },
-                child: AnimatedContainer(
-                  color: Colors.blue,
-                  duration: Duration(milliseconds: 500),
-                  height: _selected ? _heightVal : 0,
-                  width: MediaQuery.of(context).size.width,
-                  child: showFilters(),
-                ),
+                icon: Icon(Icons.filter_alt_outlined),
               ),
-              Flexible(
-                child: (isLoading)
-                    ? Center(
-                        child: Container(
-                          height: 26,
-                          width: 26,
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.green,
-                          ),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, int index) {
-                          return Column(
-                            children: [
-                              Card(
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 10.0,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          offset: Offset(4.0, 4.0),
-                                          blurRadius: 15.0,
-                                          color: Colors.black12,
-                                          spreadRadius: 1.0,
-                                        ),
-                                        BoxShadow(
-                                          offset: Offset(-4.0, -4.0),
-                                          blurRadius: 15.0,
-                                          color: Colors.white,
-                                          spreadRadius: 1.0,
-                                        )
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.circular(22.0)),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: InkWell(
-                                    splashColor: Colors.blue.withAlpha(30),
-                                    onTap: () {
-                                      setState(() {
-                                        showHideBar = !showHideBar;
-                                      });
-                                      if (showHideBar) {
-                                        SystemChrome.setEnabledSystemUIOverlays(
-                                            [SystemUiOverlay.top]);
-                                      } else {
-                                        SystemChrome.setEnabledSystemUIOverlays(
-                                            SystemUiOverlay.values);
-                                      }
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        buildInnerRow("Name: ",
-                                            "${snapshot.data[index].name}"),
-                                        buildInnerRow("Email: ",
-                                            "${snapshot.data[index].email.toString().capitalize()}"),
-                                        buildInnerRow("Country: ",
-                                            "${snapshot.data[index].country}"),
-                                        buildInnerRow("Address: ",
-                                            "${snapshot.data[index].address}"),
-                                        buildInnerRow("Contact: ",
-                                            "${snapshot.data[index].contact}"),
-                                        buildInnerRow("Gender: ",
-                                            "${snapshot.data[index].gender.toString().capitalize()}"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                height: 3.0,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _error = false;
+                  });
+                  logout(_error, context);
+                },
+                icon: Icon(Icons.exit_to_app_sharp),
               ),
             ],
+          ),
+          body: SafeArea(
+            bottom: false,
+            child: Container(
+              color: Colors.black,
+              height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selected = !_selected;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      color: Colors.blue,
+                      duration: Duration(milliseconds: 500),
+                      height: _selected ? _heightVal : 0,
+                      width: MediaQuery.of(context).size.width,
+                      child: showFilters(),
+                    ),
+                  ),
+                  Flexible(
+                    child: (!snapshot.hasData)
+                        ? Center(
+                            child: Container(
+                              height: 26,
+                              width: 26,
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              await userApiProvider.fetchAllUsers(
+                                  _nameFilterController.text,
+                                  _contactFilterController.text,
+                                  context);
+                              await userDbProvider.fetchAllUsers(
+                                  _nameFilterController.text,
+                                  _contactFilterController.text,
+                                  context);
+                              setState(() {
+                                _selected = false;
+                              });
+                            },
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, int index) {
+                                return Column(
+                                  children: [
+                                    Card(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.0,
+                                          vertical: 10.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black87,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: InkWell(
+                                          splashColor:
+                                              Colors.blue.withAlpha(30),
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) => ProfileEditor(
+                                                        "${snapshot.data[index].email.toString().capitalize()}")));
+                                            /*  if (showHideBar) {
+                                                SystemChrome
+                                                    .setEnabledSystemUIOverlays(
+                                                        [SystemUiOverlay.top]);
+                                              } else {
+                                                SystemChrome
+                                                    .setEnabledSystemUIOverlays(
+                                                        SystemUiOverlay.values);
+                                              }*/
+                                          },
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              buildInnerRow("Name: ",
+                                                  "${snapshot.data[index].name}"),
+                                              buildInnerRow("Email: ",
+                                                  "${snapshot.data[index].email.toString().capitalize()}"),
+                                              buildInnerRow("Country: ",
+                                                  "${snapshot.data[index].country}"),
+                                              buildInnerRow("Address: ",
+                                                  "${snapshot.data[index].address}"),
+                                              buildInnerRow("Contact: ",
+                                                  "${snapshot.data[index].contact}"),
+                                              buildInnerRow("Gender: ",
+                                                  "${snapshot.data[index].gender.toString().capitalize()}"),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(
+                                      height: 3.0,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -240,18 +224,20 @@ class _HomeAPIState extends State<HomeAPI> {
       children: [
         Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-        Flexible(child: Text(value, maxLines: 3, softWrap: true)),
+        Flexible(
+            child: Text(value,
+                maxLines: 3,
+                softWrap: true,
+                style: TextStyle(
+                  color: Colors.white,
+                ))),
       ],
     );
-  }
-
-  Future<String?> getNameFromPref() async {
-    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    final name = prefs.getString('name');
-    return name;
   }
 
   Widget showFilters() {
@@ -265,38 +251,19 @@ class _HomeAPIState extends State<HomeAPI> {
           child: Stack(
             children: [
               Container(
-                width: double.infinity,
-                color: Colors.blueAccent,
-              ),
-              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black87,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 padding: EdgeInsets.only(top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Filter",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.roboto(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              letterSpacing: 1,
-                              fontSize: 23,
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.filter_alt_outlined,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
                     Form(
                       key: _formkey,
                       child: Container(
@@ -308,6 +275,15 @@ class _HomeAPIState extends State<HomeAPI> {
                           children: [
                             TextFormField(
                               controller: _nameFilterController,
+                              onChanged: (val) {
+                                setState(() {
+                                  //  isLoading = true;
+                                });
+                                userDbProvider.fetchAllUsers(
+                                    _nameFilterController.text,
+                                    _contactFilterController.text,
+                                    context);
+                              },
                               onSaved: (val) {
                                 nameFilter = val!;
                               },
@@ -329,6 +305,16 @@ class _HomeAPIState extends State<HomeAPI> {
                             TextFormField(
                               keyboardType: TextInputType.phone,
                               controller: _contactFilterController,
+                              onChanged: (val) {
+                                nameFilter = val;
+                                setState(() {
+                                  //  isLoading = true;
+                                });
+                                userDbProvider.fetchAllUsers(
+                                    _nameFilterController.text,
+                                    _contactFilterController.text,
+                                    context);
+                              },
                               onSaved: (val) {
                                 contactFilter = val!;
                               },
@@ -344,56 +330,6 @@ class _HomeAPIState extends State<HomeAPI> {
                                     color: Colors.white, fontSize: 15),
                               ),
                             ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Stack(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    FocusScopeNode currentFocus =
-                                        FocusScope.of(context);
-                                    if (!currentFocus.hasPrimaryFocus) {
-                                      currentFocus.unfocus();
-                                    }
-                                    if (_nameFilterController.text.isNotEmpty ||
-                                        _contactFilterController
-                                            .text.isNotEmpty) {
-                                      setState(() {
-                                        _selected = false;
-                                        isLoading = true;
-                                        fetchAllUsers(
-                                            _nameFilterController.text,
-                                            _contactFilterController.text);
-                                      });
-                                    }
-                                    setState(() {
-                                      _selected = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 0),
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: Text(
-                                      "Search",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.roboto(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              letterSpacing: 1)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -406,5 +342,22 @@ class _HomeAPIState extends State<HomeAPI> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(context) {
+    final userStream = userDbProvider
+        .fetchAllUsers(
+            _nameFilterController.text, _contactFilterController.text, context)
+        .asStream();
+
+    return StreamBuilder(
+        stream: userStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            userApiProvider.checkLogin(context);
+          }
+          return buildTile(context, snapshot);
+        });
   }
 }

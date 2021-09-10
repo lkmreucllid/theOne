@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:theOne/main_original.dart';
 import 'Options.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:external_app_launcher/external_app_launcher.dart';
@@ -83,7 +84,7 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
         ),
         image: Center(
             child: Image.network(
-                "https://flutter.dev/assets/flutter-lockup-1caf6476beed76adec3c477586da54de6b552b2f42108ec5bc68dc63bae2df75.png",
+                "https://tech.pelmorex.com/wp-content/uploads/2020/10/flutter-800x379.png",
                 height: 175.0)),
         decoration: const PageDecoration(pageColor: Color(0xFFE6E6E6)))
   ];
@@ -93,12 +94,10 @@ class _IntroductionScreenPageState extends State<IntroductionScreenPage> {
     return IntroductionScreen(
       pages: listPagesViewModel,
       onDone: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => OptionsPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => Original()));
       },
       onSkip: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => OptionsPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => Original()));
       },
       showSkipButton: true,
       skip: new IconTheme(

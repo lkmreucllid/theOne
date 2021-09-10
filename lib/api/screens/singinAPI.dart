@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../resources/shared_pref.dart';
 import 'package:theOne/api/apiCall.dart';
 import 'homeAPI.dart';
 import 'singUpAPI.dart';
@@ -125,6 +126,8 @@ class _SignInAPIState extends State<SignInAPI> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(new FocusNode());
                                     if (isLoading) {
                                       return;
                                     }
@@ -136,7 +139,7 @@ class _SignInAPIState extends State<SignInAPI> {
                                               "Please Fill ina ll fields")));
                                     } else {
                                       login(_emailController.text,
-                                          _passwordController.text);
+                                          _passwordController.text, context);
                                       setState(() {
                                         isLoading = true;
                                       });
@@ -170,7 +173,7 @@ class _SignInAPIState extends State<SignInAPI> {
                                             height: 26,
                                             width: 26,
                                             child: CircularProgressIndicator(
-                                              backgroundColor: Colors.green,
+                                              backgroundColor: Colors.white,
                                             ),
                                           ),
                                         )
@@ -222,9 +225,9 @@ class _SignInAPIState extends State<SignInAPI> {
     );
   }
 
-  login(email, password) async {
+  login(email, password, context) async {
     Map data = {"email": email, "password": password};
-    print(data.toString());
+
     final response = await http.post(Uri.parse(LOGIN), body: data);
     setState(() {
       isLoading = false;
@@ -232,32 +235,23 @@ class _SignInAPIState extends State<SignInAPI> {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print(responseBody);
+
       Map<String, dynamic> user = responseBody['data'];
       if (responseBody['sucess'] != null) {
         print("User Name ${user['name']}");
         savePref(1, user['name'], user['email'], user['token'], user['_id']);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeAPI()));
       } else {
         print("${responseBody['sucess']}");
+        logout(1, context);
       }
+    } else if (response.statusCode == 401 || response.statusCode == 404) {
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
       scaffoldMessenger
-          .showSnackBar(SnackBar(content: Text("${responseBody['sucess']}")));
+          .showSnackBar(SnackBar(content: Text("${responseBody['message']}")));
     } else
       scaffoldMessenger
           .showSnackBar(SnackBar(content: Text("Please try again!")));
-  }
-
-  savePref(
-      int value, String name, String email, String bearer, String id) async {
-    Future<SharedPreferences> _preferences = SharedPreferences.getInstance();
-    final SharedPreferences preferences = await _preferences;
-
-    preferences.setInt("value", value);
-    preferences.setString("name", name);
-    preferences.setString("email", email);
-    preferences.setString("bearer", bearer);
-    preferences.setString("id", id.toString()).then((value) => null);
   }
 }
